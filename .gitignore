@@ -1,0 +1,6 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+data/getting_and_cleaning_data.Rmd
