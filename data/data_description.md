@@ -44,6 +44,14 @@ species_df <- species_df %>%
     arrange(Family, -RNAseq_samples)
 
 retmax <- max(species_df$RNAseq_samples + 10)
+
+
+species_info <- species_df
+save(
+    species_info,
+    file = here("data", "species_info.rda"),
+    compress = "xz"
+)
 ```
 
 ## brassicaceae_projects.rda
@@ -87,6 +95,10 @@ brassicaceae_projects <- rbind(
   brassicaceae_2021_1, brassicaceae_2021_2,
   brassicaceae_2022
 )
+
+save(brassicaceae_projects,
+     file = here("data", "brassicaceae_projects.rda"),
+     compress = "xz")
 ```
 
 ## fabaceae_projects.rda
@@ -185,5 +197,14 @@ otherfam_projects <- rbind(
 
 save(otherfam_projects,
      file = here("data", "otherfam_projects.rda"),
+     compress = "xz")
+```
+
+## date.rda
+
+``` r
+date <- gsub("-", "/", Sys.Date())
+save(date,
+     file = here::here("data", "date.rda"),
      compress = "xz")
 ```

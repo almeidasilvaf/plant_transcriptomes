@@ -101,6 +101,9 @@ brassicaceae_projects <- rbind(
   brassicaceae_2022
 )
 
+save(brassicaceae_projects,
+     file = here("data", "brassicaceae_projects.rda"),
+     compress = "xz")
 ```
 
 

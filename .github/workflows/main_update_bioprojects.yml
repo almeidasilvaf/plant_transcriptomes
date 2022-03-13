@@ -1,0 +1,64 @@
+
+# Get BioProjects on push and every Sunday at 03:00 AM
+name: scrape_plant_transcriptomes
+
+# Controls when the action will run.
+on:
+  schedule:
+    - cron:  '0 3 * * 0'
+
+
+jobs: 
+  autoscrape:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    # Load repo and install R
+    steps:
+    - uses: actions/checkout@master
+    - uses: r-lib/actions/setup-r@master
+    
+    - name: Install macOS system dependencies
+      run: |
+        ## Enable installing XML from source if needed
+        brew install libxml2
+        echo "XML_CONFIG=/usr/local/opt/libxml2/bin/xml2-config" >> $GITHUB_ENV
+        
+        ## Required to install magick as noted at
+        ## https://github.com/r-lib/usethis/commit/f1f1e0d10c1ebc75fd4c18fa7e2de4551fd9978f#diff-9bfee71065492f63457918efcd912cf2
+        brew install imagemagick@6
+        
+        ## For textshaping, required by ragg, and required by pkgdown
+        brew install harfbuzz fribidi
+        
+        ## For installing usethis's dependency gert
+        brew install libgit2
+        
+        
+
+    # Set-up R
+    - name: Install packages
+      run: |
+        R -e 'install.packages("remotes")'
+        R -e 'install.packages("tidyverse")'
+        R -e 'remotes::install_github("almeidasilvaf/bears")'
+        R -e 'install.packages("here")'
+    # Run R script
+    - name: Create bioproject tables
+      run: Rscript create_bioproject_tables.R
+      
+ # Add new files in data folder, commit along with other modified files, push
+    - name: Commit files
+      run: |
+        git config --local user.name actions-user
+        git config --local user.email "actions@github.com"
+        git add data/*
+        git commit -am "Updated bioproject table on $(date)"
+        git push origin main
+      env:
+        REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+        username: github-actions
