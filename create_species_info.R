@@ -31,8 +31,4 @@ species_info <- species_info %>%
     filter(RNAseq_samples > 0) %>%
     arrange(Family, -RNAseq_samples)
 
-save(
-    species_info,
-    file = here("data", "species_info.rda"),
-    compress = "xz"
-)
+readr::write_tsv(species_info, file = here("data", "species_info.tsv"))

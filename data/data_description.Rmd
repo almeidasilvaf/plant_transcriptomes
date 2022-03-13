@@ -51,11 +51,8 @@ retmax <- max(species_df$RNAseq_samples + 10)
 
 
 species_info <- species_df
-save(
-    species_info,
-    file = here("data", "species_info.rda"),
-    compress = "xz"
-)
+
+readr::write_tsv(species_info, file = here("data", "species_info.tsv"))
 ```
 
 
